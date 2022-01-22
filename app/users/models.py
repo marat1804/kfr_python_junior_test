@@ -1,5 +1,6 @@
 import enum
 from app import db
+from sqlalchemy.ext.hybrid import hybrid_property
 
 
 class UserRoleEnum(enum.Enum):
@@ -18,6 +19,10 @@ class User(db.Model):
     phone = db.Column(db.String, nullable=False)
     birthday = db.Column(db.Date, nullable=False)
     role = db.Column(db.Enum(UserRoleEnum), nullable=False, default=UserRoleEnum.participant)
+
+    @hybrid_property
+    def is_admin(self):
+        return self.role == UserRoleEnum.admin
 
 
 def init_user(username, password_hash, first_name, last_name, other_name, email, phone,
