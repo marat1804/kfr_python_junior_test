@@ -48,3 +48,17 @@ class PrivateUsersListMetaDataModelSchema(Schema):
 class PrivateUsersListResponseModelSchema(Schema):
     data = fields.Nested(PrivateShortenInfoModelSchema, many=True, required=True)
     meta = fields.Nested(PrivateUsersListMetaDataModelSchema, many=False, required=True)
+
+
+class PrivateUpdateUserModelSchema(Schema):
+    class Meta:
+        unknown = EXCLUDE
+    first_name = common_fields.CommonName(required=False)
+    last_name = common_fields.CommonName(required=False)
+    other_name = common_fields.CommonName(required=False)
+    email = common_fields.Email(required=False)
+    phone = common_fields.Phone(required=False)
+    birthday = fields.Date(required=False)
+    city = fields.Integer(required=False)
+    additional_info = common_fields.LongName(required=False)
+    is_admin = fields.Boolean(required=False)

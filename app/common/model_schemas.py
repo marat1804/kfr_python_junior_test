@@ -18,6 +18,8 @@ class UserSchema(SQLAlchemySchema):
     phone = auto_field(column_name='phone')
     birthday = auto_field(column_name='birthday')
     is_admin = auto_field(column_name='is_admin')
+    additional_info = auto_field(column_name='additional_info')
+    city = auto_field(column_name='city')
 
 
 class CitySchema(SQLAlchemySchema):
