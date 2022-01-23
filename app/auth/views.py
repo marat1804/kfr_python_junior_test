@@ -1,7 +1,7 @@
 from flask import Blueprint, request, make_response
 from app import db
-from app.common.utils import return_error
-from app.common.models import User, init_user
+from app.common.utils import return_error, db_get_one_or_none
+from app.common.models import User, init_user, City
 from werkzeug.security import generate_password_hash, check_password_hash
 from .schemas import RegistrationSchema, LoginModelSchema
 from app.users.schemas import CurrentUserResponseModelSchema
@@ -104,6 +104,9 @@ def register():
     if existing_user is not None:
         return return_error(409, "Username already in user")
     else:
+        city = db_get_one_or_none(City, 'id', values['city'])
+        if city is None:
+            return return_error(404, "No such city in database")
         user = init_user(
             username=username,
             password_hash=password_hash,

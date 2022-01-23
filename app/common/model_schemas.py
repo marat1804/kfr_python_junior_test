@@ -18,3 +18,13 @@ class UserSchema(SQLAlchemySchema):
     phone = auto_field(column_name='phone')
     birthday = auto_field(column_name='birthday')
     is_admin = auto_field(column_name='is_admin')
+
+
+class CitySchema(SQLAlchemySchema):
+    class Meta:
+        model = City
+        load_instance = True
+        sqla_session = db.session
+
+    id = auto_field(column_name='id', dump_only=True)
+    name = auto_field(column_name='name')
