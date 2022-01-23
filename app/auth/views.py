@@ -1,7 +1,7 @@
 from flask import Blueprint, request, make_response
 from app import db
 from app.common.utils import return_error
-from app.common.models import User, init_user, UserRoleEnum
+from app.common.models import User, init_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from .schemas import RegistrationSchema, LoginModelSchema
 from app.users.schemas import CurrentUserResponseModelSchema
@@ -17,7 +17,7 @@ def get_username_case_insensitive(email):
 
 
 def generate_access_token(user):
-    additional_claims = {"name": user.username, "role": user.role.value}
+    additional_claims = {"name": user.username, "role": user.is_admin}
     access_token = create_access_token(identity=user.id, additional_claims=additional_claims)
     return access_token
 
@@ -113,7 +113,9 @@ def register():
             email=values['email'],
             phone=values['phone'],
             birthday=values['birthday'],
-            role=UserRoleEnum.participant
+            is_admin=False,
+            city=values['city'],
+            additional_info=values.get('additional_info', None)
         )
         db.session.add(user)
 

@@ -1,11 +1,9 @@
-import enum
 from app import db
-from sqlalchemy.ext.hybrid import hybrid_property
 
 
-class UserRoleEnum(enum.Enum):
-    participant = 'Participant'
-    admin = 'Admin'
+class City(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False, unique=True)
 
 
 class User(db.Model):
@@ -18,15 +16,13 @@ class User(db.Model):
     email = db.Column(db.String, nullable=False, unique=True)
     phone = db.Column(db.String, nullable=False)
     birthday = db.Column(db.Date, nullable=False)
-    role = db.Column(db.Enum(UserRoleEnum), nullable=False, default=UserRoleEnum.participant)
-
-    @hybrid_property
-    def is_admin(self):
-        return self.role == UserRoleEnum.admin
+    is_admin = db.Column(db.Boolean, default=False, nullable=False)
+    additional_info = db.Column(db.String, nullable=True)
+    city = db.Column(db.Integer, db.ForeignKey(City.id))
 
 
 def init_user(username, password_hash, first_name, last_name, other_name, email, phone,
-              birthday, role=UserRoleEnum.participant):
+              birthday, city, is_admin=False, additional_info=None):
     user = User(username=username,
                 password_hash=password_hash,
                 first_name=first_name,
@@ -35,7 +31,9 @@ def init_user(username, password_hash, first_name, last_name, other_name, email,
                 email=email,
                 phone=phone,
                 birthday=birthday,
-                role=role)
+                is_admin=is_admin,
+                city=city,
+                additional_info=additional_info)
     return user
 
 

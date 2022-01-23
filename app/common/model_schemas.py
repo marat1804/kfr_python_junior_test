@@ -17,4 +17,4 @@ class UserSchema(SQLAlchemySchema):
     email = auto_field(column_name='email')
     phone = auto_field(column_name='phone')
     birthday = auto_field(column_name='birthday')
-    role = EnumField(UserRoleEnum, data_key='role', by_value=True)
+    is_admin = auto_field(column_name='is_admin')

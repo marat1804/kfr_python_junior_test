@@ -16,3 +16,5 @@ class RegistrationSchema(Schema):
     email = common_fields.Email(required=True)
     phone = common_fields.Phone(required=True)
     birthday = fields.Date(required=True)
+    city = fields.Integer(required=True)
+    additional_info = common_fields.LongName(required=False)
