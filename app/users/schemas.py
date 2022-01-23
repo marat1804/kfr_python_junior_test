@@ -26,3 +26,8 @@ class CurrentUserResponseModelSchema(Schema):
     phone = common_fields.Phone(required=True)
     birthday = fields.Date(required=True)
     is_admin = fields.Boolean(required=True)
+
+
+class LoginModelSchema(Schema):
+    username = common_fields.CommonName(required=True)
+    password = common_fields.Password(required=True)
