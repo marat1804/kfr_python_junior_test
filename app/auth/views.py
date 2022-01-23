@@ -1,9 +1,10 @@
 from flask import Blueprint, request, make_response
 from app import db
-from app.common import return_error
+from app.common.utils import return_error
 from app.users.models import User, init_user, UserRoleEnum
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.users.schemas import RegistrationSchema, CurrentUserResponseModelSchema, LoginModelSchema
+from .schemas import RegistrationSchema, LoginModelSchema
+from app.users.schemas import CurrentUserResponseModelSchema
 from marshmallow import ValidationError
 from flask_jwt_extended import create_access_token, set_access_cookies, jwt_required, unset_jwt_cookies
 
