@@ -2,9 +2,12 @@ from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from marshmallow import ValidationError
 
+from app import db
+from app.common.model_schemas import UserSchema
 from app.common.utils import db_get_one_or_none, db_get_all, return_error
 from app.common.models import User
-from app.users.schemas import CurrentUserResponseModelSchema, RequestUsersInQuerySchema, ShortenUserInfo
+from app.users.schemas import CurrentUserResponseModelSchema, RequestUsersInQuerySchema, ShortenUserInfo, \
+    PatchUserPersonalInfoSchema, UpdateUserResponseModelSchema
 
 users_mod = Blueprint('users', __name__, url_prefix='/users')
 
@@ -103,17 +106,19 @@ def patch_current_user_info():
         required: true
         content:
           application/json:
-            schema: LoginModelSchema
+            schema: PatchUserPersonalInfoSchema
       responses:
         '200':
           description: OK
           content:
             application/json:
-              schema: CurrentUserResponseModelSchema
+              schema: UpdateUserResponseModelSchema
         '401':
           description: Unauthorized
     """
-    result_schema = CurrentUserResponseModelSchema()
+    values = PatchUserPersonalInfoSchema().load(request.json)
     user_id = get_jwt_identity()
     user = db_get_one_or_none(User, 'id', user_id)
-    return result_schema.dump(user), 200
+    UserSchema(load_instance=True).load(values, instance=user, session=db.session, partial=True)
+    db.session.commit()
+    return UpdateUserResponseModelSchema().dump(user), 200

@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, EXCLUDE
 import app.common.fields as common_fields
 
 
@@ -39,9 +39,21 @@ class UsersListResponseModel(Schema):
 
 
 class PatchUserPersonalInfoSchema(Schema):
-    first_name = common_fields.CommonName()
-    last_name = common_fields.CommonName()
-    other_name = common_fields.CommonName()
-    email = common_fields.Email()
-    phone = common_fields.Phone()
-    birthday = fields.Date()
+    class Meta:
+        unknown = EXCLUDE
+    first_name = common_fields.CommonName(required=False)
+    last_name = common_fields.CommonName(required=False)
+    other_name = common_fields.CommonName(required=False)
+    email = common_fields.Email(required=False)
+    phone = common_fields.Phone(required=False)
+    birthday = fields.Date(required=False)
+
+
+class UpdateUserResponseModelSchema(Schema):
+    id = fields.Integer(required=True)
+    first_name = common_fields.CommonName(required=True)
+    last_name = common_fields.CommonName(required=True)
+    other_name = common_fields.CommonName(required=True)
+    email = common_fields.Email(required=True)
+    phone = common_fields.Phone(required=True)
+    birthday = fields.Date(required=True)
