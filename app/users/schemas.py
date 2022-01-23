@@ -13,6 +13,8 @@ class CurrentUserResponseModelSchema(Schema):
 
 
 class RequestUsersInQuerySchema(Schema):
+    class Meta:
+        unknown = EXCLUDE
     page = common_fields.PositiveNumber(required=True)
     size = common_fields.PositiveNumber(required=True)
 

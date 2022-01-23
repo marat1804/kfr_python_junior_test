@@ -12,13 +12,13 @@ class User(db.Model):
     password_hash = db.Column(db.String, nullable=False)
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String, nullable=False)
-    other_name = db.Column(db.String, nullable=False)
+    other_name = db.Column(db.String, nullable=True)
     email = db.Column(db.String, nullable=False, unique=True)
-    phone = db.Column(db.String, nullable=False)
-    birthday = db.Column(db.Date, nullable=False)
+    phone = db.Column(db.String, nullable=True)
+    birthday = db.Column(db.Date, nullable=True)
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
     additional_info = db.Column(db.String, nullable=True)
-    city = db.Column(db.Integer, db.ForeignKey(City.id))
+    city = db.Column(db.Integer, db.ForeignKey(City.id), nullable=True)
 
 
 def init_user(username, password_hash, first_name, last_name, other_name, email, phone,
