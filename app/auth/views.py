@@ -7,7 +7,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from .schemas import RegistrationSchema, LoginModelSchema
 from app.users.schemas import CurrentUserResponseModelSchema
 from marshmallow import ValidationError
-from flask_jwt_extended import create_access_token, set_access_cookies, jwt_required, unset_jwt_cookies
+from flask_jwt_extended import create_access_token, set_access_cookies, jwt_required, unset_jwt_cookies, \
+    create_refresh_token, set_refresh_cookies, get_jwt_identity
 
 auth_mod = Blueprint('auth', __name__, url_prefix='')
 
@@ -16,6 +17,12 @@ def generate_access_token(user):
     additional_claims = {"name": user.username, "role": user.is_admin}
     access_token = create_access_token(identity=user.id, additional_claims=additional_claims)
     return access_token
+
+
+def generate_refresh_token(user):
+    additional_claims = {"name": user.username, "role": user.is_admin}
+    refresh_token = create_refresh_token(identity=user.id, additional_claims=additional_claims)
+    return refresh_token
 
 
 @auth_mod.route('/login', methods=['POST'])
@@ -59,9 +66,42 @@ def all_users():
     else:
         return return_error(401, 'Wrong credentials')
     access_token = generate_access_token(user)
+    refresh_token = generate_refresh_token(user)
     result_schema = CurrentUserResponseModelSchema()
     response = make_response(result_schema.dump(user), 200)
     set_access_cookies(response, access_token)
+    set_refresh_cookies(response, refresh_token)
+    return response
+
+
+@auth_mod.route('/refresh', methods=['POST'])
+@jwt_required()
+def refresh():
+    """
+    post:
+      responses:
+        '200':
+          description: OK
+          headers:
+            Set-Cookie:
+              schema:
+                description: Set both access_token_cookie and refresh_token_cookie
+                type: string
+                example: access_token_cookie=eyJ0eXAi...; Path=/; HttpOnly
+          content:
+            application/json:
+              schema: CurrentUserResponseModelSchema
+        '401':
+          description: Password changed since token was issues
+    """
+    user_id = get_jwt_identity()
+    user = db_get_one_or_none(User, 'id', user_id)
+    access_token = generate_access_token(user)
+    refresh_token = generate_refresh_token(user)
+    result_schema = CurrentUserResponseModelSchema()
+    response = make_response(result_schema.dump(user), 200)
+    set_access_cookies(response, access_token)
+    set_refresh_cookies(response, refresh_token)
     return response
 
 
