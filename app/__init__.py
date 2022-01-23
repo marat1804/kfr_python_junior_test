@@ -16,7 +16,7 @@ from app.auth.views import auth_mod
 app.register_blueprint(users_mod)
 app.register_blueprint(auth_mod)
 
-from app.users.models import User
+from app.common.models import User
 db.create_all()
 db.session.commit()
 

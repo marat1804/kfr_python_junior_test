@@ -1,7 +1,7 @@
 from flask import Blueprint, request, make_response
 from app import db
 from app.common.utils import return_error
-from app.users.models import User, init_user, UserRoleEnum
+from app.common.models import User, init_user, UserRoleEnum
 from werkzeug.security import generate_password_hash, check_password_hash
 from .schemas import RegistrationSchema, LoginModelSchema
 from app.users.schemas import CurrentUserResponseModelSchema
@@ -53,10 +53,7 @@ def all_users():
     try:
         values = schema.load(request.json)
     except ValidationError as ex:
-        return {
-            'code': 409,
-            'message': ex.messages
-        }, 409
+        return return_error(409, ex.messages)
     username = values['username']
     user = get_username_case_insensitive(username)
 
