@@ -1,8 +1,8 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, current_app
 from flask_jwt_extended import jwt_required
 from marshmallow import ValidationError
 
-from app import db
+from app import get_current_db
 from app.common.model_schemas import UserSchema, CitySchema
 from app.common.utils import db_get_one_or_none, db_get_all, return_error, check_user_is_admin, \
     register_user, return_validation_error
@@ -12,6 +12,7 @@ from app.private.schemas import PrivateCreateUserModelSchema, PrivateDetailUserR
 from app.users.schemas import RequestUsersInQuerySchema
 
 private_mod = Blueprint('private', __name__, url_prefix='/private')
+db = get_current_db(current_app)
 
 
 @private_mod.route('/users', methods=['GET'])

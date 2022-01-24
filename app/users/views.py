@@ -1,8 +1,8 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, current_app
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from marshmallow import ValidationError
 
-from app import db
+from app import get_current_db
 from app.common.model_schemas import UserSchema
 from app.common.utils import db_get_one_or_none, db_get_all, return_validation_error
 from app.common.models import User
@@ -10,6 +10,7 @@ from app.users.schemas import CurrentUserResponseModelSchema, RequestUsersInQuer
     PatchUserPersonalInfoSchema, UpdateUserResponseModelSchema
 
 users_mod = Blueprint('users', __name__, url_prefix='/users')
+db = get_current_db(current_app)
 
 
 @users_mod.route('/current', methods=['GET'])

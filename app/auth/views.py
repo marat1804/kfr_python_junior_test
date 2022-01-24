@@ -1,5 +1,5 @@
-from flask import Blueprint, request, make_response
-from app import db
+from flask import Blueprint, request, make_response, current_app
+from app import get_current_db
 from app.common.utils import return_error, db_get_one_or_none, get_username_case_insensitive, register_user, \
     return_validation_error
 from app.common.models import User
@@ -11,6 +11,7 @@ from flask_jwt_extended import create_access_token, set_access_cookies, jwt_requ
     create_refresh_token, set_refresh_cookies, get_jwt_identity
 
 auth_mod = Blueprint('auth', __name__, url_prefix='')
+db = get_current_db(current_app)
 
 
 def generate_access_token(user):
@@ -64,6 +65,7 @@ def all_users():
               schema: HTTPValidationErrorSchema
     """
     schema = LoginModelSchema()
+    print('in login - ', User.query.all())
     try:
         values = schema.load(request.json)
     except ValidationError as ex:

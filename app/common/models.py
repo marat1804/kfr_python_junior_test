@@ -1,4 +1,8 @@
-from app import db
+from flask import current_app
+from app import get_current_db
+
+
+db = get_current_db(current_app)
 
 
 class City(db.Model):
