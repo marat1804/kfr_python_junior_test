@@ -3,39 +3,83 @@ import tempfile
 
 import pytest
 
-
-@pytest.fixture
-def init_app():
-
-    from app import create_app
-    from config import Config
-    test_config = Config
-    test_config.TESTING = True
-    test_config.SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
-    # DATABASE = db_path
-
-    # os.close(db_fd)
-    # os.unlink(db_path)
-    test_app = create_app(test_config)
-    with test_app.app_context():
-        yield test_app
+from app import create_app
+from config import Config
 
 
+test_config = Config
+test_config.TESTING = True
+test_config.SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+test_app = create_app(test_config)
+test_app.db.create_all()
 
 
 @pytest.fixture
-def client(init_app):
-    with init_app.test_client() as client:
+def client():
+    with test_app.test_client() as client:
         yield client
+    with test_app.app_context():
+        test_app.db.session.remove()
+        test_app.db.drop_all()
+        test_app.db.create_all()
 
 
 @pytest.fixture
-def create_users(init_app):
+def add_user_and_admin():
     from app.common.utils import init_user
-    from app.common.models import User
     from app import get_current_db
     from werkzeug.security import generate_password_hash
-    db_ = get_current_db(init_app)
+    db_ = get_current_db(test_app)
+    users = [init_user(
+        username=f'admin',
+        password_hash=generate_password_hash(f'qwerty12345'),
+        first_name=f'Admin',
+        last_name=f'Admin',
+        email=f'admin@gmail.com',
+        phone=None,
+        birthday=None,
+        is_admin=True,
+        city=None,
+        other_name=None), init_user(
+        username=f'user',
+        password_hash=generate_password_hash(f'qwerty12345'),
+        first_name=f'User',
+        last_name=f'User',
+        email=f'user@gmail.com',
+        phone=None,
+        birthday=None,
+        is_admin=True,
+        city=None,
+        other_name=None)]
+    db_.session.add_all(users)
+    db_.session.commit()
+    yield users
+
+
+@pytest.fixture
+def client_admin(client, add_user_and_admin):
+    client.post('/login', json={
+        "username": "admin",
+        "password": "qwerty12345"
+    })
+    yield client
+
+
+@pytest.fixture
+def client_user(client, add_user_and_admin):
+    client.post('/login', json={
+        "username": "user",
+        "password": "qwerty12345"
+    })
+    yield client
+
+
+@pytest.fixture
+def create_users():
+    from app.common.utils import init_user
+    from app import get_current_db
+    from werkzeug.security import generate_password_hash
+    db_ = get_current_db(test_app)
     users = [init_user(
         username=f'user_{i}',
         password_hash=generate_password_hash(f'qwerty12345'),
@@ -49,8 +93,8 @@ def create_users(init_app):
         other_name=None
     )
         for i in range(3)]
-    print("1 TUT", User.query.all())
     db_.session.add_all(users)
     db_.session.commit()
-    print("2 TUT", User.query.all())
-    yield init_app
+    yield users
+
+

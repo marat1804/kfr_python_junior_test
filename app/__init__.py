@@ -49,12 +49,11 @@ def create_app(config=Config):
         app.register_blueprint(auth_mod)
         app.register_blueprint(private_mod)
         app.register_blueprint(swagger_ui_blueprint, use_prefix=SWAGGER_URL)
-
-        from app.common.models import User, City
-
-        db.create_all()
-        db.session.commit()
-        populate_cities('cities.txt', db.session)
+        if not config.TESTING:
+            from app.common.models import User, City
+            db.create_all()
+            db.session.commit()
+            populate_cities('cities.txt', db.session)
 
         @app.route('/api')
         def create_swagger_spec():

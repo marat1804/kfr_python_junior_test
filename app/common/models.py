@@ -3,7 +3,7 @@ from app import get_current_db
 
 
 db = get_current_db(current_app)
-
+print('in user', db)
 
 class City(db.Model):
     id = db.Column(db.Integer, primary_key=True)

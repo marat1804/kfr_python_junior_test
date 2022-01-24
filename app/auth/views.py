@@ -2,7 +2,7 @@ from flask import Blueprint, request, make_response, current_app
 from app import get_current_db
 from app.common.utils import return_error, db_get_one_or_none, get_username_case_insensitive, register_user, \
     return_validation_error
-from app.common.models import User
+from app.common.models import User, City
 from werkzeug.security import check_password_hash
 from .schemas import RegistrationSchema, LoginModelSchema
 from app.users.schemas import CurrentUserResponseModelSchema
@@ -65,7 +65,6 @@ def all_users():
               schema: HTTPValidationErrorSchema
     """
     schema = LoginModelSchema()
-    print('in login - ', User.query.all())
     try:
         values = schema.load(request.json)
     except ValidationError as ex:
@@ -148,7 +147,7 @@ def register():
         '400':
           description: Bad request or weak password
         '409':
-          description: Username already in use
+          description: Username or email already in use
         '422':
           description: Validation Error
           content:
