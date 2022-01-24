@@ -1,6 +1,7 @@
 from flask import Blueprint, request, make_response
 from app import db
-from app.common.utils import return_error, db_get_one_or_none, get_username_case_insensitive, register_user
+from app.common.utils import return_error, db_get_one_or_none, get_username_case_insensitive, register_user, \
+    return_validation_error
 from app.common.models import User
 from werkzeug.security import check_password_hash
 from .schemas import RegistrationSchema, LoginModelSchema
@@ -30,6 +31,8 @@ def all_users():
     Authenticate a user
     ---
     post:
+      tags:
+        - auth
       requestBody:
         required: true
         content:
@@ -50,12 +53,17 @@ def all_users():
           description: Bad request
         '401':
           description: Wrong credentials
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema: HTTPValidationErrorSchema
     """
     schema = LoginModelSchema()
     try:
         values = schema.load(request.json)
     except ValidationError as ex:
-        return return_error(409, ex.messages)
+        return return_validation_error(ex.messages)
     username = values['username']
     user = get_username_case_insensitive(username)
 
@@ -77,7 +85,11 @@ def all_users():
 @jwt_required()
 def refresh():
     """
+    Refresh cookie for current user
+    ---
     post:
+      tags:
+        - auth
       responses:
         '200':
           description: OK
@@ -110,6 +122,8 @@ def register():
     Register a common user
     ---
     post:
+      tags:
+        - auth
       requestBody:
         required: true
         content:
@@ -125,6 +139,11 @@ def register():
           description: Bad request or weak password
         '409':
           description: Username already in use
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema: HTTPValidationErrorSchema
     """
     schema = RegistrationSchema()
     try:
@@ -142,6 +161,8 @@ def logout():
     Logout current user
     ---
     post:
+      tags:
+        - auth
       responses:
         '200':
           description: OK

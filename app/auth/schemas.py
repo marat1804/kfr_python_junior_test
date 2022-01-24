@@ -18,3 +18,6 @@ class RegistrationSchema(Schema):
     birthday = fields.Date(required=False)
     city = fields.Integer(required=False)
     additional_info = common_fields.LongName(required=False)
+
+
+auth_schemas = [LoginModelSchema, RegistrationSchema]

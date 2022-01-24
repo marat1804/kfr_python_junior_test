@@ -5,7 +5,7 @@ from marshmallow import ValidationError
 from app import db
 from app.common.model_schemas import UserSchema, CitySchema
 from app.common.utils import db_get_one_or_none, db_get_all, return_error, check_user_is_admin, \
-    register_user
+    register_user, return_validation_error
 from app.common.models import User, City
 from app.private.schemas import PrivateCreateUserModelSchema, PrivateDetailUserResponseModelSchema, \
     PrivateShortenInfoModelSchema, PrivateUpdateUserModelSchema
@@ -18,7 +18,11 @@ private_mod = Blueprint('private', __name__, url_prefix='/private')
 @jwt_required()
 def get_user_list():
     """
+    Get user's list with shorten info
+    ---
     get:
+      tags:
+        - private
       parameters:
         - required: true
           schema:
@@ -66,7 +70,7 @@ def get_user_list():
     size = request_schema.get('size', None)
     users = db_get_all(User)
     users_list = users[(page - 1) * size:page * size]
-    city_list = [user.city for user in users_list]
+    city_list = set(user.city for user in users_list)
     cities = [db_get_one_or_none(City, 'id', id_) for id_ in city_list]
     response = {
         "data": PrivateShortenInfoModelSchema(many=True).dump(users_list),
@@ -88,7 +92,11 @@ def get_user_list():
 @jwt_required()
 def private_register_user():
     """
+    Create a new user
+    ---
     post:
+      tags:
+        - private
       requestBody:
         required: true
         content:
@@ -123,7 +131,7 @@ def private_register_user():
           description: Validation Error
           content:
             application/json:
-              schema: HTTPValidationError
+              schema: HTTPValidationErrorSchema
     """
     if not check_user_is_admin():
         return return_error(403, "User is not admin")
@@ -132,7 +140,7 @@ def private_register_user():
     try:
         values = schema.load(request.json)
     except ValidationError as ex:
-        return return_error(409, ex.messages)
+        return return_validation_error(ex.messages)
     return register_user(values, db.session, PrivateDetailUserResponseModelSchema())
 
 
@@ -140,7 +148,11 @@ def private_register_user():
 @jwt_required()
 def private_get_full_user_info(pk):
     """
+    Get full info about user
+    ---
     get:
+      tags:
+        - private
       parameters:
         - required: true
           schema:
@@ -184,7 +196,7 @@ def private_get_full_user_info(pk):
           description: Validation Error
           content:
             application/json:
-              schema: HTTPValidationError
+              schema: HTTPValidationErrorSchema
     """
     if not check_user_is_admin():
         return return_error(403, "User is not admin")
@@ -199,7 +211,11 @@ def private_get_full_user_info(pk):
 @jwt_required()
 def private_delete_user_by_id(pk):
     """
+    Delete user
+    ---
     delete:
+      tags:
+        - private
       parameters:
         - required: true
           schema:
@@ -235,7 +251,7 @@ def private_delete_user_by_id(pk):
           description: Validation Error
           content:
             application/json:
-              schema: HTTPValidationError
+              schema: HTTPValidationErrorSchema
     """
     if not check_user_is_admin():
         return return_error(403, "User is not admin")
@@ -252,7 +268,11 @@ def private_delete_user_by_id(pk):
 @jwt_required()
 def private_patch_user_by_id(pk):
     """
+    Change user's personal info
+    ---
     patch:
+      tags:
+        - private
       parameters:
         - required: true
           schema:
@@ -301,11 +321,14 @@ def private_patch_user_by_id(pk):
           description: Validation Error
           content:
             application/json:
-              schema: HTTPValidationError
+              schema: HTTPValidationErrorSchema
     """
     if not check_user_is_admin():
         return return_error(403, "User is not admin")
-    values = PrivateUpdateUserModelSchema().load(request.json)
+    try:
+        values = PrivateUpdateUserModelSchema().load(request.json)
+    except ValidationError as ex:
+        return return_validation_error(ex.messages)
     user = db_get_one_or_none(User, 'id', pk)
     UserSchema(load_instance=True).load(values, instance=user, session=db.session, partial=True)
     db.session.commit()

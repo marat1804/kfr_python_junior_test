@@ -62,3 +62,9 @@ class PrivateUpdateUserModelSchema(Schema):
     city = fields.Integer(required=False)
     additional_info = common_fields.LongName(required=False)
     is_admin = fields.Boolean(required=False)
+
+
+private_schemas = [PrivateCreateUserModelSchema, PrivateDetailUserResponseModelSchema,
+                   PrivateShortenInfoModelSchema, PrivateUsersListHintMetaModelSchema,
+                   PrivateUsersListMetaDataModelSchema, PrivateUsersListResponseModelSchema,
+                   PrivateUpdateUserModelSchema]

@@ -11,6 +11,19 @@ def return_error(code: int, msg: str):
            }, code
 
 
+def return_validation_error(msg):
+    json = []
+    for k, v in msg.items():
+        json.append({
+            'loc': k,
+            'msg': v[0],
+            'type': v[0]
+        })
+    return {
+               'detail': json
+           }, 422
+
+
 def db_get_one_or_none(table, field, value):
     return table.query.filter_by(**{field: value}).one_or_none()
 

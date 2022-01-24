@@ -1,0 +1,814 @@
+components:
+  schemas:
+    City:
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        name:
+          type: string
+      required:
+      - name
+      type: object
+    CurrentUserResponseModel:
+      properties:
+        birthday:
+          format: date
+          type: string
+        email:
+          format: email
+          maxLength: 64
+          type: string
+        first_name:
+          maxLength: 64
+          type: string
+        is_admin:
+          type: boolean
+        last_name:
+          maxLength: 64
+          type: string
+        other_name:
+          maxLength: 64
+          type: string
+        phone:
+          type: string
+      required:
+      - birthday
+      - email
+      - first_name
+      - is_admin
+      - last_name
+      - other_name
+      - phone
+      type: object
+    ErrorResponseModel:
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          $ref: '#/components/schemas/ValidationError'
+      type: object
+    LoginModel:
+      properties:
+        password:
+          maxLength: 128
+          type: string
+        username:
+          maxLength: 64
+          type: string
+      required:
+      - password
+      - username
+      type: object
+    PaginatedMetaDataModel:
+      properties:
+        page:
+          type: integer
+        size:
+          type: integer
+        total:
+          type: integer
+      required:
+      - page
+      - size
+      - total
+      type: object
+    PatchUserPersonalInfo:
+      properties:
+        birthday:
+          format: date
+          type: string
+        email:
+          format: email
+          maxLength: 64
+          type: string
+        first_name:
+          maxLength: 64
+          type: string
+        last_name:
+          maxLength: 64
+          type: string
+        other_name:
+          maxLength: 64
+          type: string
+        phone:
+          type: string
+      type: object
+    PrivateCreateUserModel:
+      properties:
+        additional_info:
+          maxLength: 256
+          type: string
+        birthday:
+          format: date
+          type: string
+        city:
+          type: integer
+        email:
+          format: email
+          maxLength: 64
+          type: string
+        first_name:
+          maxLength: 64
+          type: string
+        is_admin:
+          type: boolean
+        last_name:
+          maxLength: 64
+          type: string
+        other_name:
+          maxLength: 64
+          type: string
+        password:
+          maxLength: 128
+          type: string
+        phone:
+          type: string
+        username:
+          maxLength: 64
+          type: string
+      required:
+      - email
+      - first_name
+      - is_admin
+      - last_name
+      - password
+      - username
+      type: object
+    PrivateDetailUserResponseModel:
+      properties:
+        additional_info:
+          maxLength: 256
+          nullable: true
+          type: string
+        birthday:
+          format: date
+          nullable: true
+          type: string
+        city:
+          nullable: true
+          type: integer
+        email:
+          format: email
+          maxLength: 64
+          type: string
+        first_name:
+          maxLength: 64
+          type: string
+        id:
+          type: integer
+        is_admin:
+          type: boolean
+        last_name:
+          maxLength: 64
+          type: string
+        other_name:
+          maxLength: 64
+          type: string
+        phone:
+          nullable: true
+          type: string
+        username:
+          maxLength: 64
+          type: string
+      required:
+      - email
+      - first_name
+      - id
+      - is_admin
+      - last_name
+      - username
+      type: object
+    PrivateShortenInfoModel:
+      properties:
+        city:
+          nullable: true
+          type: integer
+        email:
+          format: email
+          maxLength: 64
+          type: string
+        first_name:
+          maxLength: 64
+          type: string
+        id:
+          type: integer
+        last_name:
+          maxLength: 64
+          type: string
+      required:
+      - email
+      - first_name
+      - id
+      - last_name
+      type: object
+    PrivateUpdateUserModel:
+      properties:
+        additional_info:
+          maxLength: 256
+          type: string
+        birthday:
+          format: date
+          type: string
+        city:
+          type: integer
+        email:
+          format: email
+          maxLength: 64
+          type: string
+        first_name:
+          maxLength: 64
+          type: string
+        is_admin:
+          type: boolean
+        last_name:
+          maxLength: 64
+          type: string
+        other_name:
+          maxLength: 64
+          type: string
+        phone:
+          type: string
+      type: object
+    PrivateUsersListHintMetaModel:
+      properties:
+        city:
+          items:
+            $ref: '#/components/schemas/City'
+          type: array
+      required:
+      - city
+      type: object
+    PrivateUsersListMetaDataModel:
+      properties:
+        hint:
+          $ref: '#/components/schemas/PrivateUsersListHintMetaModel'
+        pagination:
+          $ref: '#/components/schemas/PaginatedMetaDataModel'
+      required:
+      - hint
+      - pagination
+      type: object
+    PrivateUsersListResponseModel:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/PrivateShortenInfoModel'
+          type: array
+        meta:
+          $ref: '#/components/schemas/PrivateUsersListMetaDataModel'
+      required:
+      - data
+      - meta
+      type: object
+    Registration:
+      properties:
+        additional_info:
+          maxLength: 256
+          type: string
+        birthday:
+          format: date
+          type: string
+        city:
+          type: integer
+        email:
+          format: email
+          maxLength: 64
+          type: string
+        first_name:
+          maxLength: 64
+          type: string
+        last_name:
+          maxLength: 64
+          type: string
+        other_name:
+          maxLength: 64
+          type: string
+        password:
+          maxLength: 128
+          type: string
+        phone:
+          type: string
+        username:
+          maxLength: 64
+          type: string
+      required:
+      - email
+      - first_name
+      - last_name
+      - password
+      - username
+      type: object
+    ShortenUserInfo:
+      properties:
+        email:
+          format: email
+          maxLength: 64
+          type: string
+        first_name:
+          maxLength: 64
+          type: string
+        id:
+          type: integer
+        last_name:
+          maxLength: 64
+          type: string
+      required:
+      - email
+      - first_name
+      - id
+      - last_name
+      type: object
+    UpdateUserResponseModel:
+      properties:
+        birthday:
+          format: date
+          type: string
+        email:
+          format: email
+          maxLength: 64
+          type: string
+        first_name:
+          maxLength: 64
+          type: string
+        id:
+          type: integer
+        last_name:
+          maxLength: 64
+          type: string
+        other_name:
+          maxLength: 64
+          type: string
+        phone:
+          type: string
+      required:
+      - birthday
+      - email
+      - first_name
+      - id
+      - last_name
+      - other_name
+      - phone
+      type: object
+    UsersListMetaDataModel:
+      properties:
+        pagination:
+          $ref: '#/components/schemas/PaginatedMetaDataModel'
+      required:
+      - pagination
+      type: object
+    UsersListResponseModel:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/ShortenUserInfo'
+          type: array
+        meta:
+          $ref: '#/components/schemas/UsersListMetaDataModel'
+      required:
+      - data
+      - meta
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          type: string
+        msg:
+          type: string
+        type:
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      type: object
+info:
+  title: My App
+  version: 1.0.0
+openapi: 3.0.3
+paths:
+  /users/current:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentUserResponseModel'
+          description: OK
+        '401':
+          description: Unauthorized
+      tags:
+      - users
+  /users:
+    get:
+      parameters:
+      - in: query
+        name: page
+        required: true
+        schema:
+          title: Page
+          type: integer
+      - in: query
+        name: size
+        required: true
+        schema:
+          title: Size
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersListResponseModel'
+          description: Successful Response
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+          description: Bad Request
+        '401':
+          content:
+            application/json:
+              schema:
+                title: Response 401 Users Users Get
+                type: string
+          description: Unauthorized
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      tags:
+      - users
+  /users/profile:
+    patch:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchUserPersonalInfo'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateUserResponseModel'
+          description: OK
+        '401':
+          description: Unauthorized
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      tags:
+      - users
+  /login:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginModel'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentUserResponseModel'
+          description: OK
+          headers:
+            Set-Cookie:
+              schema:
+                description: Set both access_token_cookie and refresh_token_cookie
+                type: string
+        '400':
+          description: Bad request
+        '401':
+          description: Wrong credentials
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      tags:
+      - auth
+  /refresh:
+    post:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentUserResponseModel'
+          description: OK
+          headers:
+            Set-Cookie:
+              schema:
+                description: Set both access_token_cookie and refresh_token_cookie
+                example: access_token_cookie=eyJ0eXAi...; Path=/; HttpOnly
+                type: string
+        '401':
+          description: Password changed since token was issues
+      tags:
+      - auth
+  /register:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Registration'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentUserResponseModel'
+          description: OK
+        '400':
+          description: Bad request or weak password
+        '409':
+          description: Username already in use
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      tags:
+      - auth
+  /logout:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers:
+            Set-Cookie:
+              schema:
+                description: Set both access_token_cookie and refresh_token_cookie
+                example: access_token_cookie=deleted; path=/; expires=Thu, 01 Jan
+                  1970 00:00:00 GMT
+                type: string
+        '401':
+          description: Password changed since token was issues
+      tags:
+      - auth
+  /private/users:
+    get:
+      parameters:
+      - in: query
+        name: page
+        required: true
+        schema:
+          title: Page
+          type: integer
+      - in: query
+        name: size
+        required: true
+        schema:
+          title: Size
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateUsersListResponseModel'
+          description: Successful Response
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+          description: Bad Request
+        '401':
+          content:
+            application/json:
+              schema:
+                title: Response 401 Users Users Get
+                type: string
+          description: Unauthorized
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+          description: Validation Error
+      tags:
+      - private
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrivateCreateUserModel'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateDetailUserResponseModel'
+          description: Successful Response
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+          description: Bad Request
+        '401':
+          content:
+            application/json:
+              schema:
+                title: Response 401 Private Create Users Private Users Post
+                type: string
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                title: Response 403 Private Create Users Private Users Post
+                type: string
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      tags:
+      - private
+  /private/users/{pk}:
+    get:
+      parameters:
+      - in: path
+        name: pk
+        required: true
+        schema:
+          title: Pk
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateDetailUserResponseModel'
+          description: Successful Response
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+          description: Bad Request
+        '401':
+          content:
+            application/json:
+              schema:
+                title: Response 401 Private Create Users Private Users Post
+                type: string
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                title: Response 403 Private Create Users Private Users Post
+                type: string
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                title: Response 404 Private Get User Private Users  Pk  Get
+                type: string
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      tags:
+      - private
+    delete:
+      parameters:
+      - in: path
+        name: pk
+        required: true
+        schema:
+          title: Pk
+          type: integer
+      responses:
+        '204':
+          description: Successful Response
+        '401':
+          content:
+            application/json:
+              schema:
+                title: Response 401 Private Delete User Private Users  Pk  Delete
+                type: string
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                title: Response 403 Private Delete User Private Users  Pk  Delete
+                type: string
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                title: Response 404 Private Get User Private Users  Pk  Get
+                type: string
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      tags:
+      - private
+    patch:
+      parameters:
+      - in: path
+        name: pk
+        required: true
+        schema:
+          title: Pk
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrivateUpdateUserModel'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateDetailUserResponseModel'
+          description: Successful Response
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+          description: Bad Request
+        '401':
+          content:
+            application/json:
+              schema:
+                title: Response 401 Private Patch User Private Users  Pk  Patch
+                type: string
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                title: Response 403 Private Patch User Private Users  Pk  Patch
+                type: string
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                title: Response 404 Private Patch User Private Users  Pk  Patch
+                type: string
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      tags:
+      - private
+  /swagger-ui/dist/{filename}: {}
+  /swagger-ui/{path}: {}
+  /api: {}
+tags:
+- description: User's login and register
+  name: auth
+- description: Admins part
+  name: private
+- description: User's part
+  name: users

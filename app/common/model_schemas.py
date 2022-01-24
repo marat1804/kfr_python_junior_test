@@ -30,3 +30,6 @@ class CitySchema(SQLAlchemySchema):
 
     id = auto_field(column_name='id', dump_only=True)
     name = auto_field(column_name='name')
+
+
+model_schemas = [UserSchema, CitySchema]

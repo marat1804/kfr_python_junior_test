@@ -4,7 +4,7 @@ from marshmallow import ValidationError
 
 from app import db
 from app.common.model_schemas import UserSchema
-from app.common.utils import db_get_one_or_none, db_get_all, return_error
+from app.common.utils import db_get_one_or_none, db_get_all, return_validation_error
 from app.common.models import User
 from app.users.schemas import CurrentUserResponseModelSchema, RequestUsersInQuerySchema, ShortenUserInfo, \
     PatchUserPersonalInfoSchema, UpdateUserResponseModelSchema
@@ -19,6 +19,8 @@ def current_user_info():
     Get info about current user
     ---
     get:
+      tags:
+        - users
       responses:
         '200':
           description: OK
@@ -38,7 +40,12 @@ def current_user_info():
 @jwt_required()
 def get_user_list():
     """
-     parameters:
+    Get user list with shorten info
+    ---
+    get:
+      tags:
+        - users
+      parameters:
         - required: true
           schema:
             title: Page
@@ -73,12 +80,12 @@ def get_user_list():
           description: Validation Error
           content:
             application/json:
-              schema: ErrorResponseModelSchema
+              schema: HTTPValidationErrorSchema
     """
     try:
         request_schema = RequestUsersInQuerySchema().load(request.args)
     except ValidationError as ex:
-        return return_error(409, ex.messages)
+        return_validation_error(ex.messages)
     page = request_schema.get('page', None)
     size = request_schema.get('size', None)
     users = db_get_all(User)
@@ -102,6 +109,8 @@ def patch_current_user_info():
     Change current user info
     ---
     patch:
+      tags:
+        - users
       requestBody:
         required: true
         content:
@@ -115,8 +124,16 @@ def patch_current_user_info():
               schema: UpdateUserResponseModelSchema
         '401':
           description: Unauthorized
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema: HTTPValidationErrorSchema
     """
-    values = PatchUserPersonalInfoSchema().load(request.json)
+    try:
+        values = PatchUserPersonalInfoSchema().load(request.json)
+    except ValidationError as ex:
+        return_validation_error(ex.messages)
     user_id = get_jwt_identity()
     user = db_get_one_or_none(User, 'id', user_id)
     UserSchema(load_instance=True).load(values, instance=user, session=db.session, partial=True)

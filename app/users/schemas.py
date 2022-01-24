@@ -59,3 +59,8 @@ class UpdateUserResponseModelSchema(Schema):
     email = common_fields.Email(required=True)
     phone = common_fields.Phone(required=True)
     birthday = fields.Date(required=True)
+
+
+user_schemas = [CurrentUserResponseModelSchema, ShortenUserInfo, PaginatedMetaDataModelSchema,
+                UsersListMetaDataModelSchema, UsersListResponseModel, PatchUserPersonalInfoSchema,
+                UpdateUserResponseModelSchema]
