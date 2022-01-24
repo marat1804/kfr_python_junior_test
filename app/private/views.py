@@ -1,17 +1,15 @@
 from flask import Blueprint, request
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 from marshmallow import ValidationError
-from werkzeug.security import generate_password_hash
 
 from app import db
 from app.common.model_schemas import UserSchema, CitySchema
 from app.common.utils import db_get_one_or_none, db_get_all, return_error, check_user_is_admin, \
-    get_username_case_insensitive, check_city, get_email_case_insensitive
-from app.common.models import User, City, init_user
+    register_user
+from app.common.models import User, City
 from app.private.schemas import PrivateCreateUserModelSchema, PrivateDetailUserResponseModelSchema, \
     PrivateShortenInfoModelSchema, PrivateUpdateUserModelSchema
-from app.users.schemas import CurrentUserResponseModelSchema, RequestUsersInQuerySchema, ShortenUserInfo, \
-    PatchUserPersonalInfoSchema, UpdateUserResponseModelSchema
+from app.users.schemas import RequestUsersInQuerySchema
 
 private_mod = Blueprint('private', __name__, url_prefix='/private')
 
@@ -135,40 +133,7 @@ def private_register_user():
         values = schema.load(request.json)
     except ValidationError as ex:
         return return_error(409, ex.messages)
-
-    username = values['username']
-    email = values['email']
-    password_hash = generate_password_hash(values['password'])
-
-    existing_user = get_username_case_insensitive(username)
-    existing_email = get_email_case_insensitive(email)
-    if existing_user is not None:
-        return return_error(409, "Username already in use")
-    elif existing_email is not None:
-        return return_error(409, "Email already in use")
-    else:
-        city_name = values.get('city')
-        if city_name is not None:
-            if not check_city(city_name):
-                return return_error(404, "No such city in database")
-        user = init_user(
-            username=username,
-            password_hash=password_hash,
-            first_name=values['first_name'],
-            last_name=values['last_name'],
-            other_name=values.get('other_name', None),
-            email=values['email'],
-            phone=values.get('phone', None),
-            birthday=values.get('birthday', None),
-            is_admin=values.get('is_admin'),
-            city=values.get('city', None),
-            additional_info=values.get('additional_info', None)
-        )
-        db.session.add(user)
-
-    db.session.commit()
-    result_schema = PrivateDetailUserResponseModelSchema()
-    return result_schema.dump(user), 201
+    return register_user(values, db.session, PrivateDetailUserResponseModelSchema())
 
 
 @private_mod.route('/users/<int:pk>', methods=['GET'])
