@@ -31,6 +31,10 @@ def all_users():
     Authenticate a user
     ---
     post:
+      summary: Вход в систему
+      description:
+        После успешного входа в систему необходимо установить Cookies для
+        пользователя
       tags:
         - auth
       requestBody:
@@ -88,6 +92,8 @@ def refresh():
     Refresh cookie for current user
     ---
     post:
+      summary: Обновление Cookie
+      description: Пользователю обновляются Cookie
       tags:
         - auth
       responses:
@@ -122,6 +128,8 @@ def register():
     Register a common user
     ---
     post:
+      summary: Регистрация нового пользователя
+      description: После успешной регистрации возвращаются данные пользователя
       tags:
         - auth
       requestBody:
@@ -161,6 +169,8 @@ def logout():
     Logout current user
     ---
     post:
+      summary: Выход из системы
+      description: При успешном выходе необходимо удалить установленные Cookies
       tags:
         - auth
       responses:

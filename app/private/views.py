@@ -21,6 +21,10 @@ def get_user_list():
     Get user's list with shorten info
     ---
     get:
+      summary: Постраничное получение кратких данных обо всех пользователях
+      description:
+        Здесь находится вся информация, доступная пользователю о других
+        пользователях
       tags:
         - private
       parameters:
@@ -95,6 +99,10 @@ def private_register_user():
     Create a new user
     ---
     post:
+      summary: Создание пользователя
+      description:
+        Здесь возможно занести в базу нового пользователя с минимальной
+        информацией о нем
       tags:
         - private
       requestBody:
@@ -151,6 +159,10 @@ def private_get_full_user_info(pk):
     Get full info about user
     ---
     get:
+      summary: Детальное получение информации о пользователе
+      description:
+        Здесь администратор может увидеть всю существующую пользовательскую
+        информацию
       tags:
         - private
       parameters:
@@ -214,6 +226,8 @@ def private_delete_user_by_id(pk):
     Delete user
     ---
     delete:
+      summary: Удаление пользователя
+      description: Удаление пользователя
       tags:
         - private
       parameters:
@@ -271,6 +285,8 @@ def private_patch_user_by_id(pk):
     Change user's personal info
     ---
     patch:
+      summary: Изменение информации о пользователе
+      description: Здесь администратор может изменить любую информацию о пользователе
       tags:
         - private
       parameters:

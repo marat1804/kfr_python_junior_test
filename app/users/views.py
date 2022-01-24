@@ -19,6 +19,10 @@ def current_user_info():
     Get info about current user
     ---
     get:
+      summary: Получение данных о текущем пользователе
+      description:
+        Здесь находится вся информация, доступная пользователю о самом себе,
+                а так же информация является ли он администратором
       tags:
         - users
       responses:
@@ -43,6 +47,10 @@ def get_user_list():
     Get user list with shorten info
     ---
     get:
+      summary: Постраничное получение кратких данных обо всех пользователях
+      description:
+        Здесь находится вся информация, доступная пользователю о других
+        пользователях
       tags:
         - users
       parameters:
@@ -109,6 +117,8 @@ def patch_current_user_info():
     Change current user info
     ---
     patch:
+      summary: Изменение данных пользователя
+      description: Здесь пользователь имеет возможность изменить свои данные
       tags:
         - users
       requestBody:
