@@ -1,9 +1,9 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from config import Config
 from flask_jwt_extended import JWTManager
 from flask_marshmallow import Marshmallow
 from flask_swagger_ui import get_swaggerui_blueprint
+from config.config import Config
 
 
 def populate_cities(file, db_session):
