@@ -7,6 +7,11 @@ from flask_swagger_ui import get_swaggerui_blueprint
 
 
 def populate_cities(file, db_session):
+    """
+    Populates table City with entries from file
+    :param file: file with cities
+    :param db_session: database session
+    """
     lines = open(file, encoding='utf-8').read().splitlines()
     from app.common.models import City
     cur_cities = City.query.all()
@@ -17,11 +22,21 @@ def populate_cities(file, db_session):
 
 
 def get_current_db(application):
+    """
+    Return db for current app
+    :param application: current application
+    :return: database
+    """
     with application.app_context():
         return application.db
 
 
 def create_app(config=Config):
+    """
+    Creating a Flask app with necessary modules
+    :param config: config of the application
+    :return: Flask app
+    """
     SWAGGER_URL = '/swagger-ui'
     API_URL = '/api'
 

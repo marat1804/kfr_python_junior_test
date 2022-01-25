@@ -35,7 +35,7 @@ def delete_schema_in_name(name: str):
 
 def get_apispec(app):
     spec = APISpec(
-        title="My App",
+        title="Kfr python junior test",
         version="1.0.0",
         openapi_version="3.0.3",
         plugins=[FlaskPlugin(), MarshmallowPlugin()],

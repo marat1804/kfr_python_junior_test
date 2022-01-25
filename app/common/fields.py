@@ -3,6 +3,12 @@ import re
 
 
 def _apply_validator(field, validator):
+    """
+    Apply validator for field
+    :param field: field
+    :param validator: validator
+    :return: new field with validator
+    """
     class ApplyValidator(field):
 
         def __init__(self, *args, **kwargs):

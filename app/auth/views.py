@@ -15,12 +15,22 @@ db = get_current_db(current_app)
 
 
 def generate_access_token(user):
+    """
+    Generate access token for user
+    :param user: current user
+    :return: access_token for current user
+    """
     additional_claims = {"name": user.username, "role": user.is_admin}
     access_token = create_access_token(identity=user.id, additional_claims=additional_claims)
     return access_token
 
 
 def generate_refresh_token(user):
+    """
+    Generate refresh token
+    :param user: current user
+    :return: refresh_token for current user
+    """
     additional_claims = {"name": user.username, "role": user.is_admin}
     refresh_token = create_refresh_token(identity=user.id, additional_claims=additional_claims)
     return refresh_token
