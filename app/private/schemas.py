@@ -26,14 +26,14 @@ class PrivateDetailUserResponseModelSchema(Schema):
     email = common_fields.Email(required=True)
     is_admin = fields.Boolean(required=True)
     other_name = common_fields.CommonName(required=False)
-    phone = common_fields.Phone(nullable=True)
-    birthday = fields.Date(nullable=True)
-    city = fields.Integer(nullable=True)
-    additional_info = common_fields.LongName(nullable=True)
+    phone = common_fields.Phone()
+    birthday = fields.Date()
+    city = fields.Integer()
+    additional_info = common_fields.LongName()
 
 
 class PrivateShortenInfoModelSchema(ShortenUserInfo):
-    city = fields.Integer(nullable=True)
+    city = fields.Integer()
 
 
 class PrivateUsersListHintMetaModelSchema(Schema):

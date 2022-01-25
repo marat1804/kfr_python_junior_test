@@ -70,7 +70,7 @@ def get_user_list():
     try:
         request_schema = RequestUsersInQuerySchema().load(request.args)
     except ValidationError as ex:
-        return return_error(409, ex.messages)
+        return return_validation_error(ex.messages)
     page = request_schema.get('page', None)
     size = request_schema.get('size', None)
     users = db_get_all(User)
@@ -118,7 +118,7 @@ def private_register_user():
             application/json:
               schema: PrivateDetailUserResponseModelSchema
         '400':
-          description: Bad Request
+          description: Bad request or weak password
           content:
             application/json:
               schema: ErrorResponseModel
@@ -347,6 +347,8 @@ def private_patch_user_by_id(pk):
     except ValidationError as ex:
         return return_validation_error(ex.messages)
     user = db_get_one_or_none(User, 'id', pk)
+    if user is None:
+        return return_error(404, f"User with id = {pk} not found")
     UserSchema(load_instance=True).load(values, instance=user, session=db.session, partial=True)
     db.session.commit()
     return PrivateDetailUserResponseModelSchema().dump(user), 200

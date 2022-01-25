@@ -147,14 +147,11 @@ components:
       properties:
         additional_info:
           maxLength: 256
-          nullable: true
           type: string
         birthday:
           format: date
-          nullable: true
           type: string
         city:
-          nullable: true
           type: integer
         email:
           format: email
@@ -174,7 +171,6 @@ components:
           maxLength: 64
           type: string
         phone:
-          nullable: true
           type: string
         username:
           maxLength: 64
@@ -190,7 +186,6 @@ components:
     PrivateShortenInfoModel:
       properties:
         city:
-          nullable: true
           type: integer
         email:
           format: email
@@ -706,7 +701,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponseModel'
-          description: Bad Request
+          description: Bad request or weak password
         '401':
           content:
             application/json:

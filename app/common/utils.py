@@ -58,8 +58,7 @@ def register_user(values, db_session, result_schema):
     email = values['email']
     password = values['password']
     if not password_validator(password):
-        return return_error(400, "The password must contain at least 8 characters, \
-        upper and lower case letters and a number")
+        return return_error(400, "The password must contain at least 8 characters, upper and lower case letters and a number")
     password_hash = generate_password_hash(password)
 
     existing_user = get_username_case_insensitive(username)

@@ -10,18 +10,18 @@ from config import Config
 test_config = Config
 test_config.TESTING = True
 test_config.SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
-test_app = create_app(test_config)
-test_app.db.create_all()
+app_testing = create_app(test_config)
+app_testing.db.create_all()
 
 
 @pytest.fixture
 def client():
-    with test_app.test_client() as client:
+    with app_testing.test_client() as client:
         yield client
-    with test_app.app_context():
-        test_app.db.session.remove()
-        test_app.db.drop_all()
-        test_app.db.create_all()
+    with app_testing.app_context():
+        app_testing.db.session.remove()
+        app_testing.db.drop_all()
+        app_testing.db.create_all()
 
 
 @pytest.fixture
@@ -29,7 +29,7 @@ def add_user_and_admin():
     from app.common.utils import init_user
     from app import get_current_db
     from werkzeug.security import generate_password_hash
-    db_ = get_current_db(test_app)
+    db_ = get_current_db(app_testing)
     users = [init_user(
         username=f'admin',
         password_hash=generate_password_hash(f'Qwerty12345'),
@@ -39,7 +39,7 @@ def add_user_and_admin():
         phone=None,
         birthday=None,
         is_admin=True,
-        city=0,
+        city=1,
         other_name=None), init_user(
         username=f'user',
         password_hash=generate_password_hash(f'Qwerty12345'),
@@ -49,7 +49,7 @@ def add_user_and_admin():
         phone=None,
         birthday=None,
         is_admin=False,
-        city=1,
+        city=2,
         other_name=None)]
     db_.session.add_all(users)
     db_.session.commit()
@@ -78,7 +78,7 @@ def client_user(client, add_user_and_admin):
 def create_cities():
     from app.common.models import City
     from app import get_current_db
-    db_ = get_current_db(test_app)
+    db_ = get_current_db(app_testing)
     cities = [City(name='Москва'),
               City(name='Санкт-Петербург')]
     db_.session.add_all(cities)
@@ -91,7 +91,7 @@ def create_users(create_cities):
     from app.common.utils import init_user
     from app import get_current_db
     from werkzeug.security import generate_password_hash
-    db_ = get_current_db(test_app)
+    db_ = get_current_db(app_testing)
     users = [init_user(
         username=f'user_{i}',
         password_hash=generate_password_hash(f'Qwerty12345'),
