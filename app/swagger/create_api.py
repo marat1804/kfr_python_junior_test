@@ -53,5 +53,5 @@ def get_apispec(app):
 
 
 def write_yaml_file(spec: APISpec, ):
-    with open('api.yaml', 'w') as file:
+    with open('files/api.yaml', 'w') as file:
         file.write(spec.to_yaml())

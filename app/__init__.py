@@ -53,7 +53,7 @@ def create_app(config=Config):
             from app.common.models import User, City
             db.create_all()
             db.session.commit()
-            populate_cities('cities.txt', db.session)
+            populate_cities(config.CITY_FILE, db.session)
 
         @app.route('/api')
         def create_swagger_spec():
