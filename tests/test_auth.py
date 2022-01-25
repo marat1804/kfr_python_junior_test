@@ -2,7 +2,7 @@ from . import *
 
 
 def test_simple_login_and_logout(client, create_users):
-    resp = client.get('users/current')
+    resp = client.get('/users/current')
     assert resp.status_code == 401
 
     resp = client.post('/login', json={

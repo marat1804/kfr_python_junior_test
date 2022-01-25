@@ -39,7 +39,7 @@ def add_user_and_admin():
         phone=None,
         birthday=None,
         is_admin=True,
-        city=None,
+        city=0,
         other_name=None), init_user(
         username=f'user',
         password_hash=generate_password_hash(f'Qwerty12345'),
@@ -48,8 +48,8 @@ def add_user_and_admin():
         email=f'user@gmail.com',
         phone=None,
         birthday=None,
-        is_admin=True,
-        city=None,
+        is_admin=False,
+        city=1,
         other_name=None)]
     db_.session.add_all(users)
     db_.session.commit()
@@ -75,7 +75,19 @@ def client_user(client, add_user_and_admin):
 
 
 @pytest.fixture
-def create_users():
+def create_cities():
+    from app.common.models import City
+    from app import get_current_db
+    db_ = get_current_db(test_app)
+    cities = [City(name='Москва'),
+              City(name='Санкт-Петербург')]
+    db_.session.add_all(cities)
+    db_.session.commit()
+    yield cities
+
+
+@pytest.fixture
+def create_users(create_cities):
     from app.common.utils import init_user
     from app import get_current_db
     from werkzeug.security import generate_password_hash

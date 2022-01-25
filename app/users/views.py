@@ -94,7 +94,7 @@ def get_user_list():
     try:
         request_schema = RequestUsersInQuerySchema().load(request.args)
     except ValidationError as ex:
-        return_validation_error(ex.messages)
+        return return_validation_error(ex.messages)
     page = request_schema.get('page', None)
     size = request_schema.get('size', None)
     users = db_get_all(User)
@@ -144,7 +144,7 @@ def patch_current_user_info():
     try:
         values = PatchUserPersonalInfoSchema().load(request.json)
     except ValidationError as ex:
-        return_validation_error(ex.messages)
+        return return_validation_error(ex.messages)
     user_id = get_jwt_identity()
     user = db_get_one_or_none(User, 'id', user_id)
     UserSchema(load_instance=True).load(values, instance=user, session=db.session, partial=True)

@@ -593,7 +593,7 @@ paths:
         '400':
           description: Bad request or weak password
         '409':
-          description: Username already in use
+          description: Username or email already in use
         '422':
           content:
             application/json:
