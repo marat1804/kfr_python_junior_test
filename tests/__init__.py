@@ -32,7 +32,7 @@ def add_user_and_admin():
     db_ = get_current_db(test_app)
     users = [init_user(
         username=f'admin',
-        password_hash=generate_password_hash(f'qwerty12345'),
+        password_hash=generate_password_hash(f'Qwerty12345'),
         first_name=f'Admin',
         last_name=f'Admin',
         email=f'admin@gmail.com',
@@ -42,7 +42,7 @@ def add_user_and_admin():
         city=None,
         other_name=None), init_user(
         username=f'user',
-        password_hash=generate_password_hash(f'qwerty12345'),
+        password_hash=generate_password_hash(f'Qwerty12345'),
         first_name=f'User',
         last_name=f'User',
         email=f'user@gmail.com',
@@ -60,7 +60,7 @@ def add_user_and_admin():
 def client_admin(client, add_user_and_admin):
     client.post('/login', json={
         "username": "admin",
-        "password": "qwerty12345"
+        "password": "Qwerty12345"
     })
     yield client
 
@@ -69,7 +69,7 @@ def client_admin(client, add_user_and_admin):
 def client_user(client, add_user_and_admin):
     client.post('/login', json={
         "username": "user",
-        "password": "qwerty12345"
+        "password": "Qwerty12345"
     })
     yield client
 
@@ -82,7 +82,7 @@ def create_users():
     db_ = get_current_db(test_app)
     users = [init_user(
         username=f'user_{i}',
-        password_hash=generate_password_hash(f'qwerty12345'),
+        password_hash=generate_password_hash(f'Qwerty12345'),
         first_name=f'User {i}',
         last_name=f'User {i}',
         email=f'email_{i}@gmail.com',

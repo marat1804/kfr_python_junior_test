@@ -7,7 +7,7 @@ def test_simple_login_and_logout(client, create_users):
 
     resp = client.post('/login', json={
         "username": "user_0",
-        "password": "qwerty12345"
+        "password": "Qwerty12345"
     })
     data = resp.json
     assert resp.status_code == 200
@@ -40,7 +40,7 @@ def test_simple_login_and_logout(client, create_users):
 def test_login_wrong_credentials(client, create_users):
     resp = client.post('/login', json={
         "username": "user_0",
-        "password": "qwerty123"
+        "password": "Qwerty123"
     })
     assert resp.status_code == 401
 
@@ -48,7 +48,7 @@ def test_login_wrong_credentials(client, create_users):
 def test_login_validation_error(client, create_users):
     resp = client.post('/login', json={
         "username": "user_0",
-        "password": "qwerty123"*100
+        "password": "Qwerty123"*100
     })
     json = resp.json
     assert resp.status_code == 422
@@ -60,7 +60,7 @@ def test_login_validation_error(client, create_users):
 def test_register(client, create_users):
     test_user = {
         'username': 'user_3',
-        'password': 'qwerty12345',
+        'password': 'Qwerty12345',
         'first_name': f'User 3',
         'last_name': f'User 3',
         'email': f'email_3@gmail.com',
@@ -84,7 +84,7 @@ def test_register(client, create_users):
 def test_register_username_exists(client, create_users):
     test_user = {
         'username': 'user_0',
-        'password': 'qwerty12345',
+        'password': 'Qwerty12345',
         'first_name': f'User 3',
         'last_name': f'User 3',
         'email': f'email_3@gmail.com'
@@ -96,7 +96,7 @@ def test_register_username_exists(client, create_users):
 def test_register_email_exists(client, create_users):
     test_user = {
         'username': 'user_3',
-        'password': 'qwerty12345',
+        'password': 'Qwerty12345',
         'first_name': f'User 3',
         'last_name': f'User 3',
         'email': f'email_0@gmail.com',

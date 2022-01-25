@@ -56,7 +56,11 @@ def get_email_case_insensitive(email):
 def register_user(values, db_session, result_schema):
     username = values['username']
     email = values['email']
-    password_hash = generate_password_hash(values['password'])
+    password = values['password']
+    if not password_validator(password):
+        return return_error(400, "The password must contain at least 8 characters, \
+        upper and lower case letters and a number")
+    password_hash = generate_password_hash(password)
 
     existing_user = get_username_case_insensitive(username)
     existing_email = get_email_case_insensitive(email)
@@ -86,3 +90,19 @@ def register_user(values, db_session, result_schema):
 
     db_session.commit()
     return result_schema.dump(user), 201
+
+
+def password_validator(password):
+    if len(password) < 8:
+        return False
+    lower_case = 0
+    upper_case = 0
+    digit = 0
+    for symbol in password:
+        if 'a' <= symbol <= 'z':
+            lower_case += 1
+        elif 'A' <= symbol <= 'Z':
+            upper_case += 1
+        elif '0' <= symbol <= '9':
+            digit += 1
+    return lower_case and upper_case and digit
