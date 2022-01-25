@@ -10,8 +10,8 @@ from app.common.schemas import common_schemas
 def create_tags(spec):
     tags = [
         {'name': 'auth', 'description': "User's login and register"},
-        {'name': 'private', 'description': "Admins part"},
-        {'name': 'users', 'description': "User's part"}
+        {'name': 'private', 'description': "Admin's part"},
+        {'name': 'user', 'description': "User's part"}
     ]
 
     for tag in tags:
@@ -35,8 +35,8 @@ def delete_schema_in_name(name: str):
 
 def get_apispec(app):
     spec = APISpec(
-        title="Kfr python junior test",
-        version="1.0.0",
+        title="Kefir Python Junior Test",
+        version="0.1.0",
         openapi_version="3.0.3",
         plugins=[FlaskPlugin(), MarshmallowPlugin()],
     )

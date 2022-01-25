@@ -1,7 +1,7 @@
 from flask import Blueprint, request, make_response, current_app
 from app import get_current_db
 from app.common.utils import return_error, db_get_one_or_none, get_username_case_insensitive, register_user, \
-    return_validation_error
+    return_validation_error, get_email_case_insensitive
 from app.common.models import User, City
 from werkzeug.security import check_password_hash
 from .schemas import RegistrationSchema, LoginModelSchema
@@ -79,8 +79,14 @@ def all_users():
         values = schema.load(request.json)
     except ValidationError as ex:
         return return_validation_error(ex.messages)
-    username = values['username']
-    user = get_username_case_insensitive(username)
+    login = values['login']
+    user_u = get_username_case_insensitive(login)
+    user_e = get_email_case_insensitive(login)
+    user = None
+    if user_u is not None:
+        user = user_u
+    elif user_e is not None:
+        user = user_e
 
     if user is not None:
         if not check_password_hash(user.password_hash, values['password']):
@@ -119,8 +125,8 @@ def refresh():
           content:
             application/json:
               schema: CurrentUserResponseModelSchema
-        '401':
-          description: Password changed since token was issues
+        '400':
+          description: Token expired
     """
     user_id = get_jwt_identity()
     user = db_get_one_or_none(User, 'id', user_id)
@@ -193,8 +199,6 @@ def logout():
                 description: Set both access_token_cookie and refresh_token_cookie
                 type: string
                 example: access_token_cookie=deleted; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT
-        '401':
-          description: Password changed since token was issues
     """
     response = make_response({}, 200)
     unset_jwt_cookies(response)

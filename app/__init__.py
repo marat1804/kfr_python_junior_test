@@ -44,7 +44,7 @@ def create_app(config=Config):
         SWAGGER_URL,
         API_URL,
         config={
-            'app_name': 'My App'
+            'app_name': 'Kefir Python Junior Test'
         }
     )
 

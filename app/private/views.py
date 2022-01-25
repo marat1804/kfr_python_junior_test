@@ -59,6 +59,11 @@ def get_user_list():
               schema:
                 title: Response 401 Users Users Get
                 type: string
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: ErrorResponseModelSchema
         '422':
           description: Validation Error
           content:
@@ -133,9 +138,7 @@ def private_register_user():
           description: Forbidden
           content:
             application/json:
-              schema:
-                title: Response 403 Private Create Users Private Users Post
-                type: string
+              schema: ErrorResponseModelSchema
         '422':
           description: Validation Error
           content:
@@ -195,16 +198,12 @@ def private_get_full_user_info(pk):
           description: Forbidden
           content:
             application/json:
-              schema:
-                title: Response 403 Private Create Users Private Users Post
-                type: string
+              schema: ErrorResponseModelSchema
         '404':
           description: Not Found
           content:
             application/json:
-              schema:
-                title: Response 404 Private Get User Private Users  Pk  Get
-                type: string
+              schema: ErrorResponseModelSchema
         '422':
           description: Validation Error
           content:
@@ -252,16 +251,12 @@ def private_delete_user_by_id(pk):
           description: Forbidden
           content:
             application/json:
-              schema:
-                title: Response 403 Private Delete User Private Users  Pk  Delete
-                type: string
+              schema: ErrorResponseModelSchema
         '404':
           description: Not Found
           content:
             application/json:
-              schema:
-                title: Response 404 Private Get User Private Users  Pk  Get
-                type: string
+              schema: ErrorResponseModelSchema
         '422':
           description: Validation Error
           content:
@@ -324,16 +319,12 @@ def private_patch_user_by_id(pk):
           description: Forbidden
           content:
             application/json:
-              schema:
-                title: Response 403 Private Patch User Private Users  Pk  Patch
-                type: string
+              schema: ErrorResponseModelSchema
         '404':
           description: Not Found
           content:
             application/json:
-              schema:
-                title: Response 404 Private Patch User Private Users  Pk  Patch
-                type: string
+              schema: ErrorResponseModelSchema
         '422':
           description: Validation Error
           content:

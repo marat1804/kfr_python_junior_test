@@ -25,13 +25,18 @@ def current_user_info():
         Здесь находится вся информация, доступная пользователю о самом себе,
                 а так же информация является ли он администратором
       tags:
-        - users
+        - user
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema: CurrentUserResponseModelSchema
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: ErrorResponseModelSchema
         '401':
           description: Unauthorized
     """
@@ -53,7 +58,7 @@ def get_user_list():
         Здесь находится вся информация, доступная пользователю о других
         пользователях
       tags:
-        - users
+        - user
       parameters:
         - required: true
           schema:
@@ -121,7 +126,7 @@ def patch_current_user_info():
       summary: Изменение данных пользователя
       description: Здесь пользователь имеет возможность изменить свои данные
       tags:
-        - users
+        - user
       requestBody:
         required: true
         content:
@@ -133,6 +138,11 @@ def patch_current_user_info():
           content:
             application/json:
               schema: UpdateUserResponseModelSchema
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: ErrorResponseModelSchema
         '401':
           description: Unauthorized
         '422':

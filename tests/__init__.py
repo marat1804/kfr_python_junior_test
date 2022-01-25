@@ -4,7 +4,7 @@ import tempfile
 import pytest
 
 from app import create_app
-from config import Config
+from config.config import Config
 
 
 test_config = Config
@@ -59,7 +59,7 @@ def add_user_and_admin():
 @pytest.fixture
 def client_admin(client, add_user_and_admin):
     client.post('/login', json={
-        "username": "admin",
+        "login": "admin",
         "password": "Qwerty12345"
     })
     yield client
@@ -68,7 +68,7 @@ def client_admin(client, add_user_and_admin):
 @pytest.fixture
 def client_user(client, add_user_and_admin):
     client.post('/login', json={
-        "username": "user",
+        "login": "user",
         "password": "Qwerty12345"
     })
     yield client

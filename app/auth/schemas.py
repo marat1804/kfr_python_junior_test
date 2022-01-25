@@ -3,7 +3,7 @@ import app.common.fields as common_fields
 
 
 class LoginModelSchema(Schema):
-    username = common_fields.CommonName(required=True)
+    login = common_fields.CommonName(required=True)
     password = common_fields.Password(required=True)
 
 

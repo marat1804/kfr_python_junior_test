@@ -1,12 +1,48 @@
 from . import *
 
 
-def test_simple_login_and_logout(client, create_users):
+def test_simple_login_and_logout_with_username(client, create_users):
     resp = client.get('/users/current')
     assert resp.status_code == 401
 
     resp = client.post('/login', json={
-        "username": "user_0",
+        "login": "user_0",
+        "password": "Qwerty12345"
+    })
+    data = resp.json
+    assert resp.status_code == 200
+    assert 'access_token_cookie' in resp.headers.get_all('Set-Cookie')[0]
+    assert len(resp.headers.get_all('Set-Cookie')[0]) > 80
+    assert 'refresh_token_cookie' in resp.headers.get_all('Set-Cookie')[1]
+    assert len(resp.headers.get_all('Set-Cookie')[1]) > 80
+    assert data['email'] == 'email_0@gmail.com'
+    assert data['first_name'] == 'User 0'
+    assert data['last_name'] == 'User 0'
+    assert data['is_admin']
+    assert data['phone'] is None
+    assert data['birthday'] is None
+    assert data['other_name'] is None
+
+    resp = client.get('users/current')
+    assert resp.status_code == 200
+
+    resp = client.post('/logout')
+    assert resp.status_code == 200
+    assert 'access_token_cookie' in resp.headers.get_all('Set-Cookie')[0]
+    assert len(resp.headers.get_all('Set-Cookie')[0]) < 80
+    assert 'refresh_token_cookie' in resp.headers.get_all('Set-Cookie')[1]
+    assert len(resp.headers.get_all('Set-Cookie')[1]) < 80
+
+    resp = client.get('users/current')
+    assert resp.status_code == 401
+
+
+def test_simple_login_and_logout_with_email(client, create_users):
+    resp = client.get('/users/current')
+    assert resp.status_code == 401
+
+    resp = client.post('/login', json={
+        "login": "email_0@gmail.com",
         "password": "Qwerty12345"
     })
     data = resp.json
@@ -39,7 +75,7 @@ def test_simple_login_and_logout(client, create_users):
 
 def test_login_wrong_credentials(client, create_users):
     resp = client.post('/login', json={
-        "username": "user_0",
+        "login": "user_0",
         "password": "Qwerty123"
     })
     assert resp.status_code == 401
@@ -47,7 +83,7 @@ def test_login_wrong_credentials(client, create_users):
 
 def test_login_validation_error(client, create_users):
     resp = client.post('/login', json={
-        "username": "user_0",
+        "login": "user_0",
         "password": "Qwerty123"*100
     })
     json = resp.json
